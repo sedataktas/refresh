@@ -40,8 +40,8 @@ func watch() {
 	go func() {
 		for {
 			select {
-			case <-watcher.Events:
-				//fmt.Printf("EVENT! %#v\n", event)
+			case event := <-watcher.Events:
+				fmt.Printf("EVENT! %#v\n", event)
 				cmd := exec.Command("go", "run", ".")
 				stdout, err := cmd.Output()
 
