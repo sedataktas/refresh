@@ -42,7 +42,7 @@ func watch() {
 			select {
 			case <-watcher.Events:
 				//fmt.Printf("EVENT! %#v\n", event)
-				cmd := exec.Command("go", "run", "/Users/sedat/go/src/deneme")
+				cmd := exec.Command("go", "run", ".")
 				stdout, err := cmd.Output()
 
 				if err != nil {
@@ -60,7 +60,7 @@ func watch() {
 }
 
 func addFilesToWatcher() {
-	err := filepath.Walk("/Users/sedat/go/src/deneme",
+	err := filepath.Walk(".",
 		func(path string, info os.FileInfo, err error) error {
 			if err != nil {
 				return err
