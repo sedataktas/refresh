@@ -1,11 +1,10 @@
-package main
+package runner
 
 import (
 	"fmt"
 	"github.com/fsnotify/fsnotify"
 	"log"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"time"
 )
@@ -20,7 +19,7 @@ func init() {
 	}
 }
 
-func watchCron() {
+func WatchCron() {
 	ticker := time.NewTicker(5 * time.Second)
 	quit := make(chan struct{})
 	for {
@@ -34,22 +33,24 @@ func watchCron() {
 	}
 }
 
-func watch() {
+func Watch() {
 	defer watcher.Close()
 	done := make(chan bool)
 	go func() {
 		for {
 			select {
 			case event := <-watcher.Events:
-				fmt.Printf("EVENT! %#v\n", event)
-				cmd := exec.Command("go", "run", ".")
-				stdout, err := cmd.Output()
+				if event.Name != buildFileName {
+					fmt.Printf("EVENT! %#v\n", event)
 
-				if err != nil {
-					fmt.Println(err.Error())
+					err := Stop()
+					if err != nil {
+						log.Fatal(err)
+					}
+					Build()
+					Run()
 				}
 
-				fmt.Println(string(stdout))
 			case err := <-watcher.Errors:
 				fmt.Println("ERROR", err)
 			}
@@ -65,7 +66,9 @@ func addFilesToWatcher() {
 			if err != nil {
 				return err
 			}
-			watcher.Add(path)
+			if info.Name() != buildFileName {
+				watcher.Add(path)
+			}
 			return nil
 		})
 	if err != nil {
