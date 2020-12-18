@@ -1,11 +1,14 @@
 package runner
 
-import "fmt"
+import (
+	"github.com/fatih/color"
+)
 
 func Stop() error {
 	if err := Cmd.Process.Kill(); err != nil {
 		return err
 	}
-	fmt.Printf("stopped with:%d\n", Cmd.Process.Pid)
+
+	color.Red("%s --> stopped with:%d\n", GetTime(), Cmd.Process.Pid)
 	return nil
 }

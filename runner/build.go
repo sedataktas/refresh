@@ -1,9 +1,11 @@
 package runner
 
 import (
-	"fmt"
+	"errors"
+	"github.com/fatih/color"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"os/exec"
 )
@@ -12,24 +14,25 @@ func Build() {
 	cmd := exec.Command("go", "build", "-o", buildFileName, ".")
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 	}
 
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 	}
 
 	err = cmd.Start()
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 	}
 
 	io.Copy(os.Stdout, stdout)
-	ioutil.ReadAll(stderr)
-	fmt.Println("built")
+	errBuf, _ := ioutil.ReadAll(stderr)
+
 	err = cmd.Wait()
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(errors.New(string(errBuf)))
 	}
+	color.Blue("%s --> app built", GetTime())
 }

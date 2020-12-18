@@ -1,7 +1,7 @@
 package runner
 
 import (
-	"fmt"
+	"github.com/fatih/color"
 	"log"
 	"os"
 	"os/exec"
@@ -23,9 +23,9 @@ func Run() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	fmt.Println("run with pid : ")
-	//fmt.Println(cmd.Stdout)
-	//fmt.Println(cmd.Stderr)
+
+	color.Cyan("%s --> run with pid : %v", GetTime(), cmd.Process.Pid)
+	color.Cyan("--------------------")
+
 	Cmd = cmd
-	fmt.Println(cmd.Process.Pid)
 }

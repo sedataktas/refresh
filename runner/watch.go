@@ -2,6 +2,7 @@ package runner
 
 import (
 	"fmt"
+	"github.com/fatih/color"
 	"github.com/fsnotify/fsnotify"
 	"log"
 	"os"
@@ -41,7 +42,8 @@ func Watch() {
 			select {
 			case event := <-watcher.Events:
 				if event.Name != buildFileName {
-					fmt.Printf("EVENT! %#v\n", event)
+					color.Green("%s --> EVENT! %s\n",
+						GetTime(), event.String())
 
 					err := Stop()
 					if err != nil {
