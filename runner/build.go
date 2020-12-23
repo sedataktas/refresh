@@ -11,7 +11,7 @@ import (
 )
 
 func Build() {
-	cmd := exec.Command("go", "build", "-o", buildFileName, ".")
+	cmd := exec.Command("go", "build", "-o", buildPath(), ".")
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
 		log.Fatal(err)

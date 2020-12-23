@@ -5,6 +5,8 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
+	"runtime"
 )
 
 var Cmd *exec.Cmd
@@ -14,7 +16,7 @@ const (
 )
 
 func Run() {
-	run := "./" + buildFileName
+	run := "./" + buildPath()
 	cmd := exec.Command(run)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -28,4 +30,12 @@ func Run() {
 	color.Cyan("--------------------")
 
 	Cmd = cmd
+}
+
+func buildPath() string {
+	p := filepath.Join(buildFileName)
+	if runtime.GOOS == "windows" && filepath.Ext(p) != ".exe" {
+		p += ".exe"
+	}
+	return p
 }
